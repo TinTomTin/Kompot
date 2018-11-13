@@ -15,7 +15,7 @@ namespace Score.UnitTests2
         public static void TestSetup(TestContext tct)
         {
             string initialBoard = "1,2,3,4,5,6,7,8,9";
-            board = new SudokuBoard();
+            board = new SudokuBoard(initialBoard);
         }
 
         [TestMethod, Description("Check that duplicate cells can not be added.")]
@@ -29,24 +29,41 @@ namespace Score.UnitTests2
         [TestMethod, Description("Positive test if row is legal")]
         public void TestRowLegal()
         {
-            Assert.AreEqual(true, board.IsRowLegal(0));
+            string legalRow = "1,2,3,4,5,6,7,8,9";
+            SudokuBoard newBoard = new SudokuBoard(legalRow);
+            Assert.AreEqual(true, newBoard.IsRowLegal(0));
+        }
+
+        [TestMethod, Description("Positive test if row is legal that contains empty cells")]
+        public void TestRowLegalWithEmptyCells()
+        {
+            string legalRow = "1,2,3,-1,-1,6,7,8,9";
+            SudokuBoard newBoard = new SudokuBoard(legalRow);
+            Assert.AreEqual(true, newBoard.IsRowLegal(0));
+        }
+
+        [TestMethod, Description("Negative test if row is legal that contains empty cells")]
+        public void TestRowIllegalWithEmptyCells()
+        {
+            string legalRow = "1,2,3,-1,-1,6,2,8,9";
+            SudokuBoard newBoard = new SudokuBoard(legalRow);
+            Assert.AreEqual(false, newBoard.IsRowLegal(0));
         }
 
         [TestMethod, Description("Negative test if row is legal")]
         public void TestRowIllegal()
         {
-            board.SetCell(0, 2, 2);
-
-            Assert.AreEqual(false, board.IsRowLegal(0));
+            string legalRow = "1,2,3,4,5,6,2,8,9";
+            SudokuBoard newBoard = new SudokuBoard(legalRow);
+            Assert.AreEqual(false, newBoard.IsRowLegal(0));
         }
 
         [TestMethod, Description("Load from valid string")]
         public void TestLoadFromValidString()
         {
-            string smallBoardRep = "2,5,8";
-            SudokuBoard newBoard = new SudokuBoard(smallBoardRep);
+            SudokuBoard newBoard = new SudokuBoard("2,5,8,1,3,4,6,7,9");
 
-            Assert.AreEqual(3, newBoard.Size());
+            Assert.AreEqual(9, newBoard.Size());
             Assert.AreEqual(2, newBoard.GetCell(0, 0).Number);
             Assert.AreEqual(5, newBoard.GetCell(0, 1).Number);
             Assert.AreEqual(8, newBoard.GetCell(0, 2).Number);

@@ -15,9 +15,10 @@ namespace Score
             cells = new List<Cell>(81);
         }
 
+        //TODO: throw exception if size is less than boardSize^2
         public SudokuBoard(string stringRepresentation):this()
         {
-            this.Load(stringRepresentation);
+            Load(stringRepresentation);
         }
 
         public void Load(string boardRepresentation)
@@ -31,6 +32,7 @@ namespace Score
                 int col = counter % boardSize;
                 int row = counter / boardSize;
                 cells.Add(new Cell(row, col, int.Parse(c)));
+                counter++;
             }
         }
 
@@ -71,6 +73,15 @@ namespace Score
         {
             cells.Single(c => c.Row == row && c.Column == col).Number = value;
         }
+
+        public void ClearCell(int row, int col)
+        {
+            Cell c = GetCell(row, col);
+            c.Number = -1;
+            c.IsGuess = false;
+        }
+
+        //TODO: annotation system...
 
         public Cell GetCell(int row, int col)
         {
