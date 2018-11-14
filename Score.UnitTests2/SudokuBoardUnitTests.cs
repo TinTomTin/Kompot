@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
@@ -10,21 +12,52 @@ namespace Score.UnitTests2
     public class SudokuBoardUnitTests
     {
         private static SudokuBoard board;
+        private static string defaultBoard;
 
         [ClassInitialize]
         public static void TestSetup(TestContext tct)
         {
-            string initialBoard = "1,2,3,4,5,6,7,8,9";
-            board = new SudokuBoard(initialBoard);
+            var rows = new List<String>(9)
+            {
+                "0,0,0,0,3,4,9,2,0",
+                "9,0,3,0,0,2,0,5,1",
+                "0,5,0,1,8,0,0,0,3",
+                "2,0,0,0,4,7,6,0,5",
+                "0,0,0,0,0,6,7,3,4",
+                "4,0,0,0,5,0,2,0,0",
+                "7,0,0,3,0,1,0,0,8",
+                "0,0,0,0,6,0,3,4,2",
+                "3,8,6,4,0,0,1,0,0"
+            };
+
+            defaultBoard = rows.Aggregate((curr, next) => curr + "," + next);
+            board = new SudokuBoard(defaultBoard);
         }
 
         [TestMethod, Description("Check that duplicate cells can not be added.")]
         [ExpectedException(typeof(ApplicationException), "This cell already exists.")]
         public void TestAddDuplicateCell()
         {
-            Cell cell2 = new Cell(0, 0, 5);
+            Cell cell2 = new Cell(0, 0, 0, 5);
             board.AddCell(cell2);
         }
+
+        [TestMethod, Description("Positive test if column is legal that contains empty cells")]
+        public void TestColumnIsLegalWithEmptyCells()
+        {
+            SudokuBoard newBoard = new SudokuBoard(defaultBoard);
+            Assert.AreEqual(true, newBoard.IsColumnLegal(1));
+        }
+
+        [TestMethod, Description("Negative test if column is legal")]
+        public void TestColumnIsLegal()
+        {
+            SudokuBoard newBoard = new SudokuBoard(defaultBoard);
+            newBoard.SetCell(7, 0, 2);
+
+            Assert.AreEqual(false, newBoard.IsColumnLegal(0));
+        }
+
 
         [TestMethod, Description("Positive test if row is legal")]
         public void TestRowLegal()
