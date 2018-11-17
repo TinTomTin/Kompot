@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,10 +19,11 @@ namespace Score
             sectorSize = (int) Math.Sqrt(boardSize);
         }
 
-        //TODO: throw exception if size is less than boardSize^2
+        //TODO: throw exception if size not boardSize^2
         public SudokuBoard(string stringRepresentation):this()
         {
             Load(stringRepresentation);
+            AnnotateCells();
         }
 
         public void Load(string boardRepresentation)
@@ -48,6 +51,18 @@ namespace Score
         public int Size()
         {
             return cells.Count();
+        }
+
+        private List<int> DeterminePossibilities(int row, int col)
+        {
+            Cell cell = GetCell(row, col);
+            var rowNumbers = cells.Where(c => c.Row == row).Select(c => c.Number);
+            var colNumbers = cells.Where(c => c.Column == col).Select(c => c.Number);
+            var secNumbers = cells.Where(c => c.Sector == cell.Sector).Select(c => c.Number);
+            var usedNumbers = rowNumbers.Concat(colNumbers).Concat(secNumbers).Distinct();
+            var allNumbers = Enumerable.Range(1, boardSize);
+            return allNumbers.Except(usedNumbers).ToList();
+
         }
 
         //private Cell FromString(string cellString)
@@ -81,6 +96,7 @@ namespace Score
         public void SetCell(int row, int col, int value)
         {
             cells.Single(c => c.Row == row && c.Column == col).Number = value;
+            AnnotateCells();
         }
 
         public void ClearCell(int row, int col)
@@ -90,13 +106,11 @@ namespace Score
             c.IsGuess = false;
         }
 
-        //TODO: check if whole board is legal
-        //TODO: to HTML string
+        //TODO: embed stylesheet as well
         //TODO: get illegal row numbers
         //TODO: get illegal column numbers
         //TODO: get illegal sector numbers
-        //TODO: annotation system...
-
+        
         public Cell GetCell(int row, int col)
         {
             return cells.Single(c => c.Row == row && c.Column == col);
@@ -116,40 +130,58 @@ namespace Score
 
         public bool IsLegal()
         {
-            return true;
+            return Enumerable.Range(0, boardSize).All(i => IsRowLegal(i) && IsColumnLegal(i) && IsSectorLegal(i));
         }
 
-        //public bool Tada(int rowNumber)
-        //{
-        //    return isPartLegal(rowNumber, )
-        //}
+        public bool IsSolved()
+        {
+            return cells.All(c => c.Number != 0);
+        }
 
-        //private bool isPartLegal(int number, Func<Cell, int> predicate)
-        //{
-        //    return cells.Where(c => predicate(c) == number && c.Number > 0)
-        //                .GroupBy(k => k.Number)
-        //                .All(g => g.Count() == 1);
-        //}
+        private void AnnotateCells()
+        {
+            cells.Where(c => c.Number == 0).ToList().ForEach(c => c.SetPossibilities(DeterminePossibilities(c.Row, c.Column)));
+        }
+
+        private bool isPartLegal(int number, Func<Cell, int> partGetter)
+        {
+            return cells.Where(c => partGetter(c) == number && c.Number > 0)
+                        .GroupBy(k => k.Number)
+                        .All(g => g.Count() == 1);
+        }
 
         public bool IsRowLegal(int rowNumber)
         {
-            return cells.Where(c => c.Row == rowNumber && c.Number > 0)
-                        .GroupBy(k => k.Number)
-                        .All(g => g.Count() == 1);
+            return isPartLegal(rowNumber, a => a.Row);
         }
 
         public bool IsColumnLegal(int colNumber)
         {
-            return cells.Where(c => c.Column == colNumber && c.Number > 0)
-                        .GroupBy(k => k.Number)
-                        .All(g => g.Count() == 1);
+            return isPartLegal(colNumber, a => a.Column);
         }
 
         public bool IsSectorLegal(int sectNumber)
         {
-            return cells.Where(c => c.Sector == sectNumber && c.Number > 0)
-                        .GroupBy(k => k.Number)
-                        .All(g => g.Count() == 1);
+            return isPartLegal(sectNumber, a => a.Sector);
+        }
+
+        private string RowToString(int row)
+        {
+            return string.Format("<tr>{0}</tr>", cells.Where(r => r.Row == row).Select(c => c.ToString()).Aggregate((c, n) => c + n));
+        }
+
+        public string ToHTMLString()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "Score.template.html";
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                string htmlTemplate = reader.ReadToEnd();
+                string cellsAsString = Enumerable.Range(0, boardSize).Select(i => RowToString(i)).Aggregate((c, n) => c + n);
+                return string.Format(htmlTemplate, cellsAsString);
+            }
         }
 
 

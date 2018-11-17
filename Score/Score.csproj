@@ -4,4 +4,12 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="template.html" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="template.html" />
+  </ItemGroup>
+
 </Project>

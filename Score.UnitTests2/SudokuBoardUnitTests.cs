@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -58,6 +59,21 @@ namespace Score.UnitTests2
             Assert.AreEqual(false, newBoard.IsColumnLegal(0));
         }
 
+        [TestMethod, Description("Positive test if sector is legal")]
+        public void TestSectorLegal()
+        {
+            SudokuBoard newBoard = new SudokuBoard(defaultBoard);
+            Assert.AreEqual(true, newBoard.IsSectorLegal(5));
+        }
+
+        [TestMethod, Description("Negative test if sector is legal")]
+        public void TestSectorIllLegal()
+        {
+            SudokuBoard newBoard = new SudokuBoard(defaultBoard);
+            newBoard.SetCell(3, 7, 3);
+            Assert.AreEqual(false, newBoard.IsSectorLegal(5));
+        }
+
 
         [TestMethod, Description("Positive test if row is legal")]
         public void TestRowLegal()
@@ -89,6 +105,33 @@ namespace Score.UnitTests2
             string legalRow = "1,2,3,4,5,6,2,8,9";
             SudokuBoard newBoard = new SudokuBoard(legalRow);
             Assert.AreEqual(false, newBoard.IsRowLegal(0));
+        }
+
+        [TestMethod, Description("Positive test if board is legal")]
+        public void TestBoardIsLegal()
+        {
+            SudokuBoard newBoard = new SudokuBoard(defaultBoard);
+            Assert.AreEqual(true, newBoard.IsLegal());
+        }
+
+        [TestMethod, Description("Negative test if board is legal")]
+        public void TestBoardIsIllLegal()
+        {
+            SudokuBoard newBoard = new SudokuBoard(defaultBoard);
+            newBoard.SetCell(5, 1, 5);
+            Assert.AreEqual(false, newBoard.IsLegal());
+        }
+
+        //TODO: Tests for annotations
+        //TODO: Tests for IsSolved
+
+        [TestMethod, Description("Test conversion to HTML string")]
+        public void TestToString()
+        {
+            SudokuBoard newBoard = new SudokuBoard(defaultBoard);
+            string htmlString = newBoard.ToHTMLString();
+            File.WriteAllText("Sudoku002.html", htmlString);
+            Assert.IsTrue(htmlString.Length > 10);
         }
 
         [TestMethod, Description("Load from valid string")]

@@ -1,0 +1,29 @@
+body {
+    margin: 1rem;
+    padding: 1rem;
+    font-family: "Raleway", sans-serif;
+    font-size: 2.5rem;
+    font-weight: bold;
+    background: #78859c;
+  }
+
+  table{
+      border-collapse: collapse;
+  }
+  td {
+      border: 2px solid #f1f1f1;
+      background: #ccc;
+      border-spacing: 0px;
+      padding-left: 1rem;
+      padding-right: 1rem;
+  }
+
+  .oddSector
+  {
+      background: #e1e1e1
+  }
+
+  .evenSector
+  {
+      background: #ffffff;
+  }
