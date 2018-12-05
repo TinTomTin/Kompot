@@ -65,24 +65,6 @@ namespace Score
 
         }
 
-        //private Cell FromString(string cellString)
-        //{
-        //    if(!(cellString.StartsWith('(') && cellString.EndsWith(')')))
-        //    {
-        //        string errorMessage = string.Format("Cell representation must start with ( and end with ), this cell started with {0} and ended with {1}.",
-        //            cellString[0], cellString[cellString.Length - 1]);
-        //        throw new ApplicationException(errorMessage);
-        //    }
-
-        //    string[] vals = cellString.TrimStart('(').TrimEnd(')').Split(',');
-        //    if(vals.Length != 3)
-        //    {
-        //        throw new ApplicationException(string.Format("Cell representation must have three values {0} had {1}", cellString, vals.Length));
-        //    }
-
-        //    return new Cell(int.Parse(vals[0]), int.Parse(vals[1]), 0, int.Parse(vals[2]));
-        //}
-
         public void AddCell(Cell newCell)
         {
             if (!cells.Any(c => c.Row == newCell.Row && c.Column == newCell.Column))
@@ -106,7 +88,52 @@ namespace Score
             c.IsGuess = false;
         }
 
-        //TODO: embed stylesheet as well
+        //TODO: this needs to be a seperate class that does this.
+        public (bool, SudokuBoard) EasySolve(string inputBoard)
+        {
+            SudokuBoard board = new SudokuBoard(inputBoard);
+
+            while(board.cells.FirstOrDefault(f => f.Possibilities.Count == 1) != null)
+            {
+                Cell c = board.cells.FirstOrDefault(f => f.Possibilities.Count == 1);
+                board.SetCell(c.Row, c.Column, c.Possibilities.First());
+            }
+
+            return (board.IsSolved(), board);
+        }
+
+
+        public bool RecursiveSolve(int cell, int guessDepth)
+        {
+            var solvedBoard = EasySolve(this.ToString());
+            if (solvedBoard.Item1)
+            {
+                Load(solvedBoard.ToString());
+                return true;
+            }
+
+            if (cell == boardSize * boardSize) return IsSolved();
+
+            if (cells[cell].Number != 0)
+            {
+                if (guessDepth >= cells[cell].Possibilities.Count)
+                {
+                    return RecursiveSolve(cell++, guessDepth);
+                }
+                else
+                {
+                    var guess = cells[cell].Possibilities[guessDepth];
+                    cells[cell].Number = guess;
+                    AnnotateCells();
+                    return RecursiveSolve(cell, guessDepth++);
+                }
+            }
+            else
+            {
+                return RecursiveSolve(cell++, guessDepth);
+            }
+        }
+
         //TODO: get illegal row numbers
         //TODO: get illegal column numbers
         //TODO: get illegal sector numbers
@@ -170,18 +197,32 @@ namespace Score
             return string.Format("<tr>{0}</tr>", cells.Where(r => r.Row == row).Select(c => c.ToString()).Aggregate((c, n) => c + n));
         }
 
+        public override string ToString()
+        {
+            return cells.Select(s => s.Number.ToString()).Aggregate((c, n) => c + "," + n);
+        }
+
         public string ToHTMLString()
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "Score.template.html";
+            var resourceTemplateName = "Score.template.html";
+            var resourceCssName = "Score.Sudoku.css";
+            string templateString = String.Empty, cssString = String.Empty;
 
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            using (Stream stream = assembly.GetManifestResourceStream(resourceTemplateName))
             using (StreamReader reader = new StreamReader(stream))
             {
-                string htmlTemplate = reader.ReadToEnd();
-                string cellsAsString = Enumerable.Range(0, boardSize).Select(i => RowToString(i)).Aggregate((c, n) => c + n);
-                return string.Format(htmlTemplate, cellsAsString);
+                templateString = reader.ReadToEnd();
             }
+
+            using (Stream stream = assembly.GetManifestResourceStream(resourceCssName))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                cssString = reader.ReadToEnd();
+            }
+
+            string cellsAsString = Enumerable.Range(0, boardSize).Select(i => RowToString(i)).Aggregate((c, n) => c + n);
+            return string.Format(templateString, cssString, cellsAsString);
         }
 
 

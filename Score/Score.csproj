@@ -5,10 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Sudoku.css" />
     <None Remove="template.html" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Sudoku.css" />
     <EmbeddedResource Include="template.html" />
   </ItemGroup>
 

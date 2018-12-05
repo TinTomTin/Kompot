@@ -122,16 +122,99 @@ namespace Score.UnitTests2
             Assert.AreEqual(false, newBoard.IsLegal());
         }
 
-        //TODO: Tests for annotations
         //TODO: Tests for IsSolved
 
+        [TestMethod, Description("Test annotations")]
+        public void TestAnnotations()
+        {
+            SudokuBoard newBoard = new SudokuBoard(defaultBoard);
+            List<int> expectedAnnotations = new List<int>() { 1, 6, 8 };
+            CollectionAssert.AreEqual(expectedAnnotations, newBoard.GetCell(0, 0).Possibilities);
+            CollectionAssert.AreEqual(new List<int> { 5 }, newBoard.GetCell(6, 6).Possibilities);
+            Assert.IsTrue(newBoard.GetCell(0, 4).Possibilities.Count == 0, "Should be empty");
+        }
+
+        [TestMethod, Description("Test annotations are updated")]
+        public void TestAnnotationsAfterSettingCell()
+        {
+            SudokuBoard newBoard = new SudokuBoard(defaultBoard);
+            List<int> expectedAnnotations = new List<int>() { 1, 6, 8 };
+            CollectionAssert.AreEqual(expectedAnnotations, newBoard.GetCell(0, 0).Possibilities);
+            newBoard.SetCell(0, 8, 6);
+            CollectionAssert.DoesNotContain(newBoard.GetCell(0, 0).Possibilities, 6);
+        }
+
+        [TestMethod, Description("Test cell setting")]
+        public void TestCellSetter()
+        {
+            SudokuBoard newBoard = new SudokuBoard(defaultBoard);
+            List<int> expectedAnnotations = new List<int>() { 1, 3, 6, 7, 9 };
+
+            Assert.AreEqual(0, newBoard.GetCell(5, 1).Number, "Cell has correct initial value");
+            CollectionAssert.Contains(newBoard.GetCell(5, 1).Possibilities, 3, "Cell has right value in annotations");
+            newBoard.SetCell(5, 1, 3);
+            Cell cellJustSet = newBoard.GetCell(5, 1);
+
+            Assert.AreEqual(3, cellJustSet.Number, "Cell number has been set");
+            CollectionAssert.DoesNotContain(cellJustSet.Possibilities, 3, "Cell has been re annotated");
+            
+        }
+
         [TestMethod, Description("Test conversion to HTML string")]
-        public void TestToString()
+        public void TestToHTMLString()
         {
             SudokuBoard newBoard = new SudokuBoard(defaultBoard);
             string htmlString = newBoard.ToHTMLString();
             File.WriteAllText("Sudoku002.html", htmlString);
             Assert.IsTrue(htmlString.Length > 10);
+        }
+
+        [TestMethod, Description("Test conversion to string")]
+        public void TestToString()
+        {
+            SudokuBoard newBoard = new SudokuBoard(defaultBoard);
+            Assert.AreEqual(defaultBoard, newBoard.ToString());
+        }
+
+        [TestMethod, Description("Test Easy solve algorithm")]
+        public void TestEasySolve()
+        {
+            SudokuBoard newBoard = new SudokuBoard(defaultBoard);
+            var solvedBoard = newBoard.EasySolve(defaultBoard);
+
+            Assert.IsTrue(solvedBoard.Item1, "Board is solved");
+            Assert.IsTrue(solvedBoard.Item2.IsLegal(), "Board is in a legal state");
+            Assert.AreEqual(7, solvedBoard.Item2.GetCell(8, 8).Number, "Value of last cell");
+        }
+
+        [TestMethod, Description("Test Easy solve algorithm on difficult board")]
+        public void TestEasySolveOnDifficultBoard()
+        {
+            var rows = new List<String>(9)
+            {
+                "0,0,0,9,0,0,4,6,0",
+                "4,0,6,7,0,0,0,3,0",
+                "0,0,0,0,6,0,0,7,0",
+                "0,5,0,0,0,0,2,0,4",
+                "0,8,0,0,0,0,0,5,0",
+                "2,0,3,0,0,0,0,9,0",
+                "0,2,0,0,7,0,0,0,0",
+                "0,4,0,0,0,2,5,0,8",
+                "0,9,5,0,0,8,0,0,0"
+            };
+
+            var hardBoardString = rows.Aggregate((curr, next) => curr + "," + next);
+            var hardBoard = new SudokuBoard(hardBoardString);
+
+            string htmlString = hardBoard.ToHTMLString();
+            File.WriteAllText("SudokuHard.html", htmlString);
+            Assert.IsTrue(htmlString.Length > 10);
+
+            //var solvedBoard = newBoard.EasySolve(defaultBoard);
+
+            //Assert.IsTrue(solvedBoard.Item1, "Board is solved");
+            //Assert.IsTrue(solvedBoard.Item2.IsLegal(), "Board is in a legal state");
+            //Assert.AreEqual(7, solvedBoard.Item2.GetCell(8, 8).Number, "Value of last cell");
         }
 
         [TestMethod, Description("Load from valid string")]

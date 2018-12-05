@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Score", "Score\Score.csproj", "{C5B361CA-572C-4863-88C2-3D51252CA00E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Score", "Score\Score.csproj", "{C5B361CA-572C-4863-88C2-3D51252CA00E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Score.UnitTests2", "Score.UnitTests2\Score.UnitTests2.csproj", "{95BFA961-B717-4405-8E96-00EDEF07ECCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Score.UnitTests2", "Score.UnitTests2\Score.UnitTests2.csproj", "{95BFA961-B717-4405-8E96-00EDEF07ECCD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuLabRunner", "SudokuLabRunner\SudokuLabRunner.csproj", "{5E49A5FF-2D1F-493F-B1C5-86A4674D8625}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{95BFA961-B717-4405-8E96-00EDEF07ECCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95BFA961-B717-4405-8E96-00EDEF07ECCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95BFA961-B717-4405-8E96-00EDEF07ECCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E49A5FF-2D1F-493F-B1C5-86A4674D8625}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E49A5FF-2D1F-493F-B1C5-86A4674D8625}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E49A5FF-2D1F-493F-B1C5-86A4674D8625}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E49A5FF-2D1F-493F-B1C5-86A4674D8625}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

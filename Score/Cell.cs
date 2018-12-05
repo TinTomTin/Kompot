@@ -6,7 +6,13 @@ namespace Score
 {
     public class Cell
     {
-        public int Number;
+        private int p_number;
+
+        public int Number {
+            get { return p_number; }
+            set { p_number = value; Possibilities.Remove(value); }
+        } 
+
         public int Column;
         public int Row;
         public int Sector;
@@ -15,9 +21,9 @@ namespace Score
 
         public Cell()
         {
+            Possibilities = new List<int>();
             Number = 0;
             IsGuess = false;
-            Possibilities = new List<int>();
         }
 
         public Cell(int row, int col, int sector, int number):this()
