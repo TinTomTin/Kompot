@@ -208,13 +208,42 @@ namespace Score.UnitTests2
 
             string htmlString = hardBoard.ToHTMLString();
             File.WriteAllText("SudokuHard.html", htmlString);
-            Assert.IsTrue(htmlString.Length > 10);
 
-            //var solvedBoard = newBoard.EasySolve(defaultBoard);
+            var solvedBoard = hardBoard.EasySolve(hardBoardString);
 
-            //Assert.IsTrue(solvedBoard.Item1, "Board is solved");
-            //Assert.IsTrue(solvedBoard.Item2.IsLegal(), "Board is in a legal state");
-            //Assert.AreEqual(7, solvedBoard.Item2.GetCell(8, 8).Number, "Value of last cell");
+            Assert.IsFalse(solvedBoard.Item1, "Board is notsolved");
+            Assert.IsTrue(solvedBoard.Item2.IsLegal(), "Board is in a legal state");
+            Assert.AreEqual(2, solvedBoard.Item2.GetCell(8, 7).Number, "Value of second cell");
+        }
+
+        [TestMethod, Description("Test recursive backtracking algorithm on difficult board")]
+        public void TestRecursiveSolveOnDifficultBoard()
+        {
+            var rows = new List<String>(9)
+            {
+                "0,0,0,9,0,0,4,6,0",
+                "4,0,6,7,0,0,0,3,0",
+                "0,0,0,0,6,0,0,7,0",
+                "0,5,0,0,0,0,2,0,4",
+                "0,8,0,0,0,0,0,5,0",
+                "2,0,3,0,0,0,0,9,0",
+                "0,2,0,0,7,0,0,0,0",
+                "0,4,0,0,0,2,5,0,8",
+                "0,9,5,0,0,8,0,0,0"
+            };
+
+            var hardBoardString = rows.Aggregate((curr, next) => curr + "," + next);
+            var hardBoard = new SudokuBoard(hardBoardString);
+
+            var foundSolution = hardBoard.RecursiveSolve();
+
+            Assert.IsTrue(foundSolution, "Board is solved");
+            Assert.IsTrue(hardBoard.IsLegal(), "Board is in a legal state");
+            Assert.IsTrue(hardBoard.IsSolved(), "Board is solved by solved state...err, useless test actually, but anyway");
+
+            string htmlString = hardBoard.ToHTMLString();
+            File.WriteAllText("SudokuHardSolved.html", htmlString);
+            //Assert.AreEqual(2, solvedBoard.Item2.GetCell(8, 7).Number, "Value of second cell");
         }
 
         [TestMethod, Description("Load from valid string")]

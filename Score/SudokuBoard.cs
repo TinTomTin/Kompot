@@ -102,36 +102,59 @@ namespace Score
             return (board.IsSolved(), board);
         }
 
-
-        public bool RecursiveSolve(int cell, int guessDepth)
+        //TODO: what if you backtrack? You have to put back the number that was guessed into annotations
+        //TODO: what about recording the result of easy solve?
+        public bool RecursiveSolve()
         {
             var solvedBoard = EasySolve(this.ToString());
             if (solvedBoard.Item1)
             {
-                Load(solvedBoard.ToString());
+                Load(solvedBoard.Item2.ToString());
                 return true;
+            } else
+            {
+                Cell c = cells.FirstOrDefault(k => k.Number == 0);
+
+                if (c != null)
+                {
+                    foreach (int i in c.Possibilities)
+                    {
+                        c.SetNumber(i);
+                        if (IsLegal())
+                        {
+                            RecursiveSolve();
+                        } else
+                        {
+                            c.SetNumber(0);
+                        }
+                    }
+                    if (!IsSolved()) c.SetNumber(0);
+                }
+                return IsSolved();
             }
 
-            if (cell == boardSize * boardSize) return IsSolved();
+            // if (cell == boardSize * boardSize) return IsSolved();
 
-            if (cells[cell].Number != 0)
-            {
-                if (guessDepth >= cells[cell].Possibilities.Count)
-                {
-                    return RecursiveSolve(cell++, guessDepth);
-                }
-                else
-                {
-                    var guess = cells[cell].Possibilities[guessDepth];
-                    cells[cell].Number = guess;
-                    AnnotateCells();
-                    return RecursiveSolve(cell, guessDepth++);
-                }
-            }
-            else
-            {
-                return RecursiveSolve(cell++, guessDepth);
-            }
+            
+
+            //if (cells[cell].Number == 0)
+            //{
+            //    if (guessDepth >= cells[cell].Possibilities.Count)
+            //    {
+            //        return RecursiveSolve(cell++, 0);
+            //    }
+            //    else
+            //    {
+            //        var guess = cells[cell].Possibilities[guessDepth];
+            //        cells[cell].Number = guess;
+            //        AnnotateCells();
+            //        return RecursiveSolve(cell, ++guessDepth);
+            //    }
+            //}
+            //else
+            //{
+            //    return RecursiveSolve(++cell, 0);
+            //}
         }
 
         //TODO: get illegal row numbers

@@ -34,6 +34,11 @@ namespace Score
             Sector = sector;
         }
 
+        public void SetNumber(int i)
+        {
+            p_number = i;
+        }
+
         public void SetPossibilities(List<int> possibilities)
         {
             Possibilities = possibilities;
