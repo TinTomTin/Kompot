@@ -37,7 +37,7 @@ namespace SudokuLabRunner
             string input =  String.Empty;
             int steps = 0;
 
-            while (board.EasyStep() && input != "q")
+            while (board.EasySolve(board.ToString()).Item1 && input != "q")
             {
                 Console.WriteLine("Iteration: {0}", steps);
                 string boardState = board.ToHTMLString();
