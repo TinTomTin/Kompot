@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Score", "Score\Score.csproj", "{C5B361CA-572C-4863-88C2-3D51252CA00E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sudoku.Engine", "Sudoku.Engine\Sudoku.Engine.csproj", "{C5B361CA-572C-4863-88C2-3D51252CA00E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Score.UnitTests", "Score.UnitTests\Score.UnitTests.csproj", "{95BFA961-B717-4405-8E96-00EDEF07ECCD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sudoku.UnitTests", "Sudoku.UnitTests\Sudoku.UnitTests.csproj", "{95BFA961-B717-4405-8E96-00EDEF07ECCD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuLabRunner", "SudokuLabRunner\SudokuLabRunner.csproj", "{5E49A5FF-2D1F-493F-B1C5-86A4674D8625}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuLabRunner", "SudokuLabRunner\Sudoku.Runner.csproj", "{5E49A5FF-2D1F-493F-B1C5-86A4674D8625}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

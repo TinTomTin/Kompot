@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Score\Sudoku.Engine.csproj" />
+    <ProjectReference Include="..\Sudoku.Engine\Sudoku.Engine.csproj" />
   </ItemGroup>
 
 </Project>

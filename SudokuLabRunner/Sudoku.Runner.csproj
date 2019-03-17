@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Score\Score.csproj" />
+    <ProjectReference Include="..\Sudoku.Engine\Sudoku.Engine.csproj" />
   </ItemGroup>
 
 </Project>
