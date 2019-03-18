@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sudoku.Engine", "Sudoku.Eng
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sudoku.UnitTests", "Sudoku.UnitTests\Sudoku.UnitTests.csproj", "{95BFA961-B717-4405-8E96-00EDEF07ECCD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuLabRunner", "SudokuLabRunner\Sudoku.Runner.csproj", "{5E49A5FF-2D1F-493F-B1C5-86A4674D8625}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SudokuLabRunner", "Sudoku.LabRunner\Sudoku.Runner.csproj", "{5E49A5FF-2D1F-493F-B1C5-86A4674D8625}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
